@@ -1,0 +1,19 @@
+{
+  "name": "yeti-rush",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Yeti Rush – ein Ski-Arcade-Spiel für iPad. Spiel, Website und Branding.",
+  "type": "module",
+  "scripts": {
+    "brand": "node tools/build-brand.mjs",
+    "render": "node tools/render-assets.mjs",
+    "sync": "node tools/sync.mjs",
+    "build": "npm run brand && npm run render && npm run sync",
+    "serve": "npx http-server . -p 8080 -c-1"
+  },
+  "devDependencies": {
+    "@fontsource/fredoka": "^5.0.0",
+    "opentype.js": "^1.3.4",
+    "playwright": "^1.56.1"
+  }
+}

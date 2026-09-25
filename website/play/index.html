@@ -1,0 +1,136 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Yeti Rush">
+  <meta name="theme-color" content="#2F6FEB">
+  <meta name="description" content="Yeti Rush – rase die Piste hinunter, spring über Schanzen und entkomme dem Yeti.">
+  <title>Yeti Rush</title>
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="icon" type="image/svg+xml" href="img/favicon.svg">
+  <link rel="icon" type="image/png" sizes="32x32" href="icons/favicon-32.png">
+  <link rel="apple-touch-icon" href="icons/icon-180.png">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <canvas id="game" aria-label="Yeti Rush Spielfeld"></canvas>
+
+  <!-- HUD -->
+  <div id="hud" class="hidden">
+    <div class="hud-left">
+      <div id="hearts" class="hearts" aria-label="Leben"></div>
+    </div>
+    <div class="hud-center">
+      <div id="score" class="score">0</div>
+      <div id="combo" class="combo hidden"><span id="mult">×2</span> Combo</div>
+    </div>
+    <div class="hud-right">
+      <div id="meters" class="meters">0 m</div>
+      <button id="btn-pause" class="icon-btn" aria-label="Pause">
+        <svg viewBox="0 0 24 24" width="24" height="24"><rect x="6" y="5" width="4" height="14" rx="1.5"/><rect x="14" y="5" width="4" height="14" rx="1.5"/></svg>
+      </button>
+    </div>
+    <div id="yeti-banner" class="yeti-banner hidden" data-i18n="yetiAwake"></div>
+  </div>
+
+  <!-- Title -->
+  <section id="screen-title" class="screen">
+    <div class="title-wrap">
+      <img class="logo" src="img/logo.svg" alt="Yeti Rush">
+      <p class="tagline" data-i18n="tagline"></p>
+      <button id="btn-play" class="btn btn-primary btn-xl" data-i18n="play"></button>
+      <p class="best-line"><span data-i18n="best"></span>: <strong id="best-score">0</strong></p>
+      <div class="row">
+        <button id="btn-howto" class="btn btn-ghost" data-i18n="howto"></button>
+        <button id="btn-settings" class="btn btn-ghost" data-i18n="settings"></button>
+      </div>
+    </div>
+  </section>
+
+  <!-- How to play -->
+  <section id="screen-howto" class="screen hidden">
+    <div class="card">
+      <h2 data-i18n="howtoTitle"></h2>
+      <ul class="howto">
+        <li><span class="ico"><svg viewBox="0 0 40 40"><circle cx="20" cy="20" r="9" fill="#FF6B2C"/><path d="M4 20 L10 14 V26Z M36 20 L30 14 V26Z" fill="#1B3A5C"/></svg></span><span data-i18n="howto1"></span></li>
+        <li><span class="ico"><svg viewBox="0 0 40 40"><path d="M6 32 L30 32 L34 18 L10 26Z" fill="#B7773F"/><path d="M6 32 L10 26 L34 18 L30 32Z" fill="#fff" opacity=".0"/><path d="M8 24 L32 14 L34 18 L10 26Z" fill="#fff" stroke="#C8DAEE"/><rect x="8" y="30" width="24" height="3" fill="#FFC53D"/></svg></span><span data-i18n="howto2"></span></li>
+        <li><span class="ico"><svg viewBox="0 0 40 40"><path d="M20 5 L31 18 L20 35 L9 18Z" fill="#5CC8FF"/><path d="M20 5 L31 18 L20 21 L9 18Z" fill="#B7ECFF"/></svg></span><span data-i18n="howto3"></span></li>
+        <li><span class="ico"><img src="img/yeti-mark.svg" alt=""></span><span data-i18n="howto4"></span></li>
+      </ul>
+      <p class="small" data-i18n="howtoItems"></p>
+      <p class="small muted" data-i18n="rotate"></p>
+      <button class="btn btn-primary" data-back data-i18n="back"></button>
+    </div>
+  </section>
+
+  <!-- Settings -->
+  <section id="screen-settings" class="screen hidden">
+    <div class="card">
+      <h2 data-i18n="settings"></h2>
+      <label class="toggle"><span data-i18n="music"></span><input type="checkbox" id="set-music"><i></i></label>
+      <label class="toggle"><span data-i18n="sfx"></span><input type="checkbox" id="set-sfx"><i></i></label>
+      <label class="toggle"><span data-i18n="haptics"></span><input type="checkbox" id="set-haptics"><i></i></label>
+      <div class="seg-row">
+        <span data-i18n="control"></span>
+        <div class="seg" role="radiogroup">
+          <button data-control="touch" data-i18n="ctrlTouch"></button>
+          <button data-control="tilt" data-i18n="ctrlTilt"></button>
+        </div>
+      </div>
+      <button id="btn-reset" class="btn btn-ghost btn-small" data-i18n="resetBest"></button>
+      <button class="btn btn-primary" data-back data-i18n="back"></button>
+      <p class="small muted version">Yeti Rush v1.0</p>
+    </div>
+  </section>
+
+  <!-- Pause -->
+  <section id="screen-pause" class="screen hidden">
+    <div class="card">
+      <h2 data-i18n="paused"></h2>
+      <button id="btn-resume" class="btn btn-primary btn-xl" data-i18n="resume"></button>
+      <div class="row">
+        <button id="btn-restart" class="btn btn-ghost" data-i18n="restart"></button>
+        <button class="btn btn-ghost" data-home data-i18n="home"></button>
+      </div>
+    </div>
+  </section>
+
+  <!-- Game over -->
+  <section id="screen-over" class="screen hidden">
+    <div class="card">
+      <img id="over-yeti" class="over-yeti hidden" src="img/yeti-mark.svg" alt="">
+      <h2 id="over-title"></h2>
+      <div id="new-best" class="badge hidden" data-i18n="newBest"></div>
+      <div class="final-score" id="final-score">0</div>
+      <div class="stats">
+        <div><b id="st-distance">0 m</b><span data-i18n="distance"></span></div>
+        <div><b id="st-crystals">0</b><span data-i18n="crystals"></span></div>
+        <div><b id="st-gates">0</b><span data-i18n="gates"></span></div>
+        <div><b id="st-tricks">0</b><span data-i18n="tricks"></span></div>
+      </div>
+      <p class="best-line"><span data-i18n="best"></span>: <strong id="over-best">0</strong></p>
+      <button id="btn-again" class="btn btn-primary btn-xl" data-i18n="again"></button>
+      <div class="row">
+        <button id="btn-share" class="btn btn-ghost" data-i18n="share"></button>
+        <button class="btn btn-ghost" data-home data-i18n="home"></button>
+      </div>
+    </div>
+  </section>
+
+  <div id="toast" class="toast hidden"></div>
+
+  <script src="js/util.js"></script>
+  <script src="js/i18n.js"></script>
+  <script src="js/audio.js"></script>
+  <script src="js/art.js"></script>
+  <script src="js/world.js"></script>
+  <script src="js/input.js"></script>
+  <script src="js/game.js"></script>
+  <script src="js/ui.js"></script>
+  <script src="js/main.js"></script>
+</body>
+</html>
