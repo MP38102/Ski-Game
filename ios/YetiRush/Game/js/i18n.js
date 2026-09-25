@@ -1,0 +1,121 @@
+'use strict';
+(function (YR) {
+  const dict = {
+    de: {
+      tagline: 'Schnall die Ski an. Er ist hinter dir her.',
+      play: 'Los geht’s!',
+      best: 'Rekord',
+      howto: 'Anleitung',
+      settings: 'Einstellungen',
+      back: 'Zurück',
+      howtoTitle: 'So wird gespielt',
+      howto1: 'Finger links oder rechts vom Skifahrer halten, um zu lenken. Je weiter weg, desto schärfer die Kurve.',
+      howto2: 'Über Schanzen springen und in der Luft tippen für Tricks – aber lande sauber!',
+      howto3: 'Fahre durch Slalomtore und sammle Eiskristalle für Combo-Punkte.',
+      howto4: 'Ab 1.000 m wacht der Yeti auf. Bleib schnell – sonst bist du sein Frühstück.',
+      howtoItems: 'Kakao = Extraleben · Stern = Turbo & unverwundbar · Eis = keine Lenkung · Buckel bremsen',
+      music: 'Musik',
+      sfx: 'Soundeffekte',
+      haptics: 'Haptik',
+      control: 'Steuerung',
+      ctrlTouch: 'Touch',
+      ctrlTilt: 'Neigen',
+      resetBest: 'Rekord zurücksetzen',
+      resetDone: 'Rekord gelöscht',
+      paused: 'Pause',
+      resume: 'Weiter',
+      restart: 'Neustart',
+      home: 'Menü',
+      gameOver: 'Gestürzt!',
+      eaten: 'Vom Yeti geschnappt!',
+      score: 'Punkte',
+      distance: 'Strecke',
+      crystals: 'Kristalle',
+      gates: 'Tore',
+      tricks: 'Tricks',
+      newBest: 'Neuer Rekord!',
+      again: 'Nochmal',
+      share: 'Teilen',
+      shareText: 'Ich habe {score} Punkte in Yeti Rush geschafft – schaffst du mehr?',
+      gate: 'Tor!',
+      missed: 'Tor verpasst',
+      yetiAwake: 'DER YETI IST WACH!',
+      yetiEscaped: 'Yeti abgehängt!',
+      turbo: 'TURBO!',
+      extraLife: '+1 Leben',
+      landed: 'Sauber gelandet!',
+      tiltHint: 'iPad neigen zum Lenken',
+      tapToStart: 'Tippe zum Starten',
+      trickSpin: '360°',
+      trickFlip: 'Salto',
+      trickGrab: 'Grab',
+      rotate: 'Hochformat & Querformat funktionieren beide.',
+    },
+    en: {
+      tagline: 'Strap in. He’s right behind you.',
+      play: 'Let’s go!',
+      best: 'Best',
+      howto: 'How to play',
+      settings: 'Settings',
+      back: 'Back',
+      howtoTitle: 'How to play',
+      howto1: 'Hold a finger to the left or right of the skier to steer. The further away, the sharper the turn.',
+      howto2: 'Hit ramps and tap while airborne for tricks – but land clean!',
+      howto3: 'Pass through slalom gates and grab ice crystals to build your combo.',
+      howto4: 'After 1,000 m the Yeti wakes up. Stay fast – or become breakfast.',
+      howtoItems: 'Cocoa = extra life · Star = turbo & invincible · Ice = no steering · Moguls slow you down',
+      music: 'Music',
+      sfx: 'Sound effects',
+      haptics: 'Haptics',
+      control: 'Controls',
+      ctrlTouch: 'Touch',
+      ctrlTilt: 'Tilt',
+      resetBest: 'Reset best score',
+      resetDone: 'Best score cleared',
+      paused: 'Paused',
+      resume: 'Resume',
+      restart: 'Restart',
+      home: 'Menu',
+      gameOver: 'Wipeout!',
+      eaten: 'Caught by the Yeti!',
+      score: 'Score',
+      distance: 'Distance',
+      crystals: 'Crystals',
+      gates: 'Gates',
+      tricks: 'Tricks',
+      newBest: 'New best!',
+      again: 'Again',
+      share: 'Share',
+      shareText: 'I scored {score} points in Yeti Rush – can you beat it?',
+      gate: 'Gate!',
+      missed: 'Gate missed',
+      yetiAwake: 'THE YETI IS AWAKE!',
+      yetiEscaped: 'Yeti escaped!',
+      turbo: 'TURBO!',
+      extraLife: '+1 life',
+      landed: 'Clean landing!',
+      tiltHint: 'Tilt your iPad to steer',
+      tapToStart: 'Tap to start',
+      trickSpin: '360',
+      trickFlip: 'Flip',
+      trickGrab: 'Grab',
+      rotate: 'Portrait and landscape both work.',
+    },
+  };
+
+  const lang = (navigator.language || 'en').toLowerCase().startsWith('de') ? 'de' : 'en';
+  YR.lang = lang;
+  YR.t = (key, vars) => {
+    let s = (dict[lang] && dict[lang][key]) || dict.en[key] || key;
+    if (vars) for (const k in vars) s = s.replace('{' + k + '}', vars[k]);
+    return s;
+  };
+  YR.fmt = (n) => Math.floor(n).toLocaleString(lang === 'de' ? 'de-DE' : 'en-US');
+
+  YR.applyI18n = (root) => {
+    document.documentElement.lang = lang;
+    (root || document).querySelectorAll('[data-i18n]').forEach((el) => {
+      el.textContent = YR.t(el.getAttribute('data-i18n'));
+    });
+  };
+})(window.YR);
