@@ -29,6 +29,7 @@ Auf dem iPad/iPhone die Seite in Safari öffnen und über *Teilen → Zum Home-B
 - **Open World:** frei befahrbare Hänge mit präparierten Pisten (Cord-Muster), Tiefschnee, Eis, Felsen, Klippen, Wäldern, Hütten, Dorf, Sessel-, Gondel- und Schleppliften, Seilrutschen, Gleitschirm-Startplätzen, Funpark mit Kickern, Rails und Boxen, Pistenkarte mit Schnellreise.
 - **Lebendiger Berg:** KI-Skifahrer und -Snowboarder fahren Pisten, stehen am Lift an und fahren mit; Carving-Spuren bleiben im Schnee. Tageszeiten, Wetter (klar, bewölkt, Schneefall, Nebel, Sturm), Flutlicht, Polarlichter.
 - **Tricks:** Spins bis 1440, Back-/Frontflips (doppelt, dreifach), Cork, Rodeo, Misty, 12 Grabs mit Tweak, Rails und Boxen (50-50, Slide, Lipslide, Spin-out), Butter 180/360, Nose/Tail Press, Power-Carve, Powder-Slash, Baum- und Wipfel-Taps, Haarscharf, Klippensprung, Big Air, perfekte Landung, Rückwärtsfahren (Switch, +20 %). Combos multiplizieren die Punkte.
+- **Retro-Pisten:** zwei Minispiele mit 30 zusätzlichen Levels – eine 2D-Seitenansicht (18 Level mit Kickern, Klippen, Felsen und Saltos) und eine Draufsicht (12 Slalom-Level durch den Wald), jeweils mit 1–3 Sternen.
 - **Modi:** Zen-Modus (keine Mitfahrer, keine Challenges), Beobachten (freie Kamera mit 140 KI-Fahrern), wählbare Tageszeit und Wetter.
 
 ## Steuerung
@@ -58,6 +59,7 @@ Alles läuft ohne Bibliotheken direkt im Browser:
 - `js/props.js`, `js/characters.js` – alle 3D-Modelle (Bäume, Felsen, Hütten, Lifte, Kicker, Fahrer mit Ski/Board) werden per Code erzeugt.
 - `js/player.js` – Ski-/Snowboard-Physik (Carving, Kanten, Tiefschnee, Eis, Sprünge, Rails, Stürze), Trick-System.
 - `js/challenges.js` – Generator und Ablauf aller Challenges, Geister-Fahrer zur Medaillen-Kalibrierung.
+- `js/minigames.js` – die Retro-Minispiele (Canvas 2D) mit prozeduralen Levels.
 - `js/audio.js` – Musik (eigene Stimmung pro Berg) und Effekte werden live mit der Web Audio API synthetisiert.
 - `tools/build-assets.mjs` – erzeugt Emblem, Logo (Schrift als Pfade), App-Icons, Social-Bild und Screenshots.
 

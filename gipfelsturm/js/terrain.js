@@ -149,6 +149,7 @@
     // Mark piste corridors (distance field) and groom them smooth.
     groomPistes(pistes) {
       const { nx, nz } = this;
+      const ncx = new Float32Array(nx * nz), ncz = new Float32Array(nx * nz);
       for (const p of pistes) {
         const half = p.width / 2;
         const reach = half + 16;
@@ -171,6 +172,7 @@
               if (d < this.pisteD[id]) {
                 this.pisteD[id] = d;
                 this.pisteId[id] = p.id;
+                ncx[id] = px; ncz[id] = pz;
               }
             }
           }
@@ -178,12 +180,20 @@
       }
       const soft = this._blur(this.h, 3);
       const softer = this._blur(this.h, 6);
+      const sample = (arr, x, z) => {
+        const fx = GS.clamp(x / CS, 0, nx - 1.001), fz = GS.clamp(z / CS, 0, nz - 1.001);
+        const i = fx | 0, j = fz | 0, tx = fx - i, tz = fz - j, id = j * nx + i;
+        return (arr[id] * (1 - tx) + arr[id + 1] * tx) * (1 - tz) + (arr[id + nx] * (1 - tx) + arr[id + nx + 1] * tx) * tz;
+      };
       for (let id = 0; id < this.h.length; id++) {
         const d = this.pisteD[id];
         if (d > 16) continue;
         const w = 1 - GS.smooth(-2, 16, d);
         const p = pistes[this.pisteId[id]];
-        const target = p && p.smooth > 1 ? softer[id] : soft[id];
+        const src = p && p.smooth > 1 ? softer : soft;
+        // level the cross slope: pull towards the height of the centre line
+        const hc = sample(src, ncx[id], ncz[id]);
+        const target = GS.lerp(src[id], hc, 0.65 * (1 - GS.smooth(0, 14, d)));
         this.h[id] = GS.lerp(this.h[id], target, w);
         this.groom[id] = 1 - GS.smooth(-1, 3, d);
       }

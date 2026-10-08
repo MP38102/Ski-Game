@@ -546,7 +546,9 @@
         const lat = Math.hypot(this.x - px, this.z - pz);
         if (lat > (g.kind === 'box' ? 0.6 : 0.45)) continue;
         const ry = GS.lerp(g.ay, g.by, t);
-        if (this.y < ry - 0.3 || this.y > ry + 0.7) continue;
+        // riding straight onto the start of a rail or box hops on automatically
+        const hop = this.mode === 'ski' && t < 0.18 && this.y >= ry - 0.85;
+        if (!hop && (this.y < ry - 0.3 || this.y > ry + 0.7)) continue;
         if (this.mode === 'air' && this.vy > 1.5) continue;
         const hs = Math.hypot(this.vx, this.vz);
         if (hs < 2) continue;
