@@ -13,6 +13,7 @@ Alles wurde von Grund auf neu gebaut: Engine, Grafiken, Musik und Sounds, Logo, 
 | `website/` | Landingpage, Presse-Kit, Datenschutz, Impressum; die spielbare Web-Version liegt unter `website/play/` |
 | `brand/` | Logo, Wortmarke, Yeti-Maskottchen, App-Icon (SVG + PNG in allen Größen) |
 | `tools/` | Build-Skripte für die Brand-Assets, die PNG-Exporte, die Screenshots und den Sync |
+| `gipfelsturm/` | **Gipfelsturm** – das zweite Spiel: ein Open-World-3D-Skispiel mit 12 Bergen und ~190 Challenges (eigene WebGL-2-Engine). Siehe [gipfelsturm/README.md](gipfelsturm/README.md) |
 
 ## Spielen
 
@@ -52,4 +53,4 @@ Nach Änderungen in `game/` immer `npm run sync` ausführen. Dadurch landet die 
 
 ## Website veröffentlichen
 
-Der Workflow `.github/workflows/pages.yml` veröffentlicht `website/` bei jedem Push auf `main` auf GitHub Pages. Dafür muss GitHub Pages einmalig aktiviert werden (Settings → Pages → Source: GitHub Actions). **Vor dem Livegang müssen im Impressum und in der Datenschutzerklärung die gelb markierten Platzhalter ausgefüllt werden.**
+Der Workflow `.github/workflows/pages.yml` veröffentlicht `website/` und das Spiel `gipfelsturm/` (unter `/gipfelsturm/`, also https://mp38102.github.io/Ski-Game/gipfelsturm/) bei jedem Push auf `main` auf GitHub Pages. Dafür muss GitHub Pages einmalig aktiviert werden (Settings → Pages → Source: GitHub Actions). **Vor dem Livegang müssen im Impressum und in der Datenschutzerklärung die gelb markierten Platzhalter ausgefüllt werden.**
