@@ -9,6 +9,7 @@
   let nextNoteTime = 0;
   let step = 0;
   let intensity = 0; // 0 = calm, 1 = yeti chase
+  let muted = false; // forced mute from a hosting portal
 
   function init() {
     if (ctx) return;
@@ -16,7 +17,7 @@
     if (!AC) return;
     ctx = new AC();
     master = ctx.createGain();
-    master.gain.value = 0.9;
+    master.gain.value = muted ? 0 : 0.9;
     const comp = ctx.createDynamicsCompressor();
     comp.threshold.value = -14;
     comp.ratio.value = 4;
@@ -263,6 +264,10 @@
     startMusic,
     stopMusic,
     setIntensity(v) { intensity = v; },
+    setMuted(v) {
+      muted = v;
+      if (ctx) master.gain.setTargetAtTime(v ? 0 : 0.9, ctx.currentTime, 0.02);
+    },
     setWind(speedNorm) {
       if (!ctx) return;
       windGain.gain.setTargetAtTime(Math.min(0.22, speedNorm * 0.2), ctx.currentTime, 0.1);

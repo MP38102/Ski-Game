@@ -53,3 +53,11 @@ Nach Änderungen in `game/` immer `npm run sync` ausführen. Dadurch landet die 
 ## Website veröffentlichen
 
 Der Workflow `.github/workflows/pages.yml` veröffentlicht `website/` bei jedem Push auf `main` auf GitHub Pages. Dafür muss GitHub Pages einmalig aktiviert werden (Settings → Pages → Source: GitHub Actions). **Vor dem Livegang müssen im Impressum und in der Datenschutzerklärung die gelb markierten Platzhalter ausgefüllt werden.**
+
+## Auf CrazyGames veröffentlichen
+
+```bash
+npm run crazygames
+```
+
+Der Befehl erzeugt in `dist/crazygames/` das Upload-Paket `yeti-rush-crazygames.zip` mit eingebundenem CrazyGames SDK v3 sowie die Cover-Bilder in 1920×1080, 800×470 und 800×1200 Pixel. Das Spiel meldet Gameplay-Start und -Stopp und bei einem neuen Rekord „happytime“ an das SDK. Den Stummschalter des Portals beachtet es ebenfalls. Ohne SDK, also in der iPad-App und auf der eigenen Website, verhält es sich unverändert.

@@ -6,6 +6,7 @@
   YR.game = game;
   YR.UI.init(game);
   YR.UI.show('title');
+  YR.Platform.init();
 
   YR.Input.attach(canvas, () => {
     if (game.state === 'play') game.pause();
@@ -49,7 +50,7 @@
   }
 
   // Offline support when running as a website / home-screen web app.
-  if ('serviceWorker' in navigator && location.protocol.startsWith('http') && !params.get('demo')) {
+  if ('serviceWorker' in navigator && location.protocol.startsWith('http') && !params.get('demo') && !window.CrazyGames) {
     navigator.serviceWorker.register('sw.js').catch(() => {});
   }
 })(window.YR);

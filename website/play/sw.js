@@ -1,8 +1,8 @@
 // Offline cache for the web version of Yeti Rush.
-const VERSION = 'yetirush-v1.0.0';
+const VERSION = 'yetirush-v1.1.0';
 const FILES = [
   './', 'index.html', 'style.css', 'manifest.webmanifest',
-  'js/util.js', 'js/i18n.js', 'js/audio.js', 'js/art.js', 'js/world.js',
+  'js/util.js', 'js/i18n.js', 'js/platform.js', 'js/audio.js', 'js/art.js', 'js/world.js',
   'js/input.js', 'js/game.js', 'js/ui.js', 'js/main.js',
   'img/logo.svg', 'img/yeti-mark.svg', 'img/favicon.svg',
   'fonts/fredoka-latin-500-normal.woff2', 'fonts/fredoka-latin-600-normal.woff2', 'fonts/fredoka-latin-700-normal.woff2',

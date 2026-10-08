@@ -74,12 +74,14 @@
       this.reset(false);
       this.state = 'play';
       YR.Input.reset();
+      YR.Platform.gameplayStart();
       this.ui.hud(this.hudData());
     }
 
     pause() {
       if (this.state !== 'play') return;
       this.state = 'paused';
+      YR.Platform.gameplayStop();
       YR.Audio.setWind(0);
       this.ui.show('pause');
     }
@@ -87,6 +89,7 @@
     resume() {
       if (this.state !== 'paused') return;
       this.state = 'play';
+      YR.Platform.gameplayStart();
       this.last = performance.now();
       YR.Input.reset();
       this.ui.show(null);
@@ -95,6 +98,7 @@
     toTitle() {
       this.reset(true);
       this.state = 'title';
+      YR.Platform.gameplayStop();
       YR.Audio.setWind(0);
     }
 
@@ -563,6 +567,7 @@
     gameOver(reason) {
       this.ended = true;
       this.state = 'over';
+      YR.Platform.gameplayStop();
       YR.Audio.setWind(0);
       YR.Audio.setIntensity(0);
       this.ui.yetiWarning(false);
@@ -572,7 +577,10 @@
       if (isBest) YR.store.set('best', score);
       YR.store.set('bestDistance', Math.max(YR.store.get('bestDistance', 0), Math.floor(this.meters)));
       YR.store.set('runs', YR.store.get('runs', 0) + 1);
-      if (isBest) YR.Audio.sfx.record();
+      if (isBest) {
+        YR.Audio.sfx.record();
+        YR.Platform.happytime();
+      }
       else YR.Audio.sfx.gameOver();
       this.ui.gameOver({
         reason,
