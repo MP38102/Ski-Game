@@ -283,11 +283,21 @@
         };
       }
       case 'bigair': {
-        const { p, s0 } = pickSeg(160, 'steep');
-        const kq = world.pisteAt(p, s0 + 70);
-        const k = world.addKicker(kq.x, kq.z, kq.tx, kq.tz, 12, 3.6, 8, 'bigair');
-        const path = pistePath(world, p, s0, 140);
-        return { piste: p, s0, path, kicker: k, start: startFromPiste(world, p, s0), reqLift: p.from, attempts: 3, medals: [600, 1300, 2300], len: path.len };
+        // steepest free 130 m stretch of any piste for a proper in-run
+        let best = null;
+        for (const pp of world.pistes) {
+          for (let a = 20; a < pp.len - 170; a += 10) {
+            if (world._occ && world._occ.some((o) => o.p === pp.id && !(a + 150 < o.a || a - 10 > o.b))) continue;
+            const qa = world.pisteAt(pp, a), qb = world.pisteAt(pp, a + 100);
+            const drop = (T.heightAt(qa.x, qa.z) - T.heightAt(qb.x, qb.z)) / 100;
+            if (!best || drop > best.drop) best = { p: pp, s0: a, drop };
+          }
+        }
+        const { p, s0 } = best || pickSeg(160, 'steep');
+        const kq = world.pisteAt(p, s0 + 105);
+        const k = world.addKicker(kq.x, kq.z, kq.tx, kq.tz, 12, 3.2, 8, 'bigair', 0.85);
+        const path = pistePath(world, p, s0, 175);
+        return { piste: p, s0, path, kicker: k, start: startFromPiste(world, p, s0), reqLift: p.from, attempts: 3, medals: [700, 1500, 2600], len: path.len };
       }
       case 'slopestyle': {
         if (!world.parkPiste) return null;
@@ -716,8 +726,8 @@
       if (this.state !== 'run') return;
       const ch = this.ch;
       if (airT > this.airBest) this.airBest = r3(airT);
-      if (ch.type === 'bigair' && this.prog > 60 && airT > 0.6) {
-        const s = tricks.reduce((a, t) => a + t.pts, 0) * Math.max(1, tricks.length);
+      if (ch.type === 'bigair' && this.prog > 95 && airT > 0.6) {
+        const s = tricks.reduce((a, t) => a + t.pts, 0) * (1 + 0.25 * Math.max(0, tricks.length - 1));
         this._attemptDone(s);
       }
       if (ch.type === 'skijump' && airT > 0.6) {
@@ -729,7 +739,7 @@
     onCrash() {
       if (this.state !== 'run') return;
       const ch = this.ch;
-      if (ch.type === 'bigair' && this.prog > 62) this._attemptDone(0);
+      if (ch.type === 'bigair' && this.prog > 97) this._attemptDone(0);
       if (ch.type === 'skijump' && this.game.player.z > ch.sj.edgeZ) this._jumpDone(0);
     }
 

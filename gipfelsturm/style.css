@@ -30,6 +30,7 @@ html, body {
   -webkit-user-select: none; user-select: none; -webkit-touch-callout: none; overscroll-behavior: none; touch-action: none;
 }
 canvas#game { position: fixed; inset: 0; display: block; touch-action: none; }
+.vignette { position: fixed; inset: 0; pointer-events: none; z-index: 1; background: radial-gradient(ellipse at 50% 45%, rgba(0,0,0,0) 62%, rgba(10,24,48,0.22) 100%); }
 .hidden { display: none !important; }
 button { font-family: inherit; color: inherit; cursor: pointer; }
 h1, h2, h3 { margin: 0; }

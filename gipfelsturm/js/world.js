@@ -595,17 +595,21 @@
     }
 
     // ---------- Park (kickers, rails, boxes) ---------------------------------------
-    addKicker(x, z, dirx, dirz, len, height, width, tag) {
+    // Kicker ramp as an analytic height feature. "lift" raises the ramp's
+    // base line towards horizontal so the lip points upwards even on steep
+    // slopes (big-air kickers stand on scaffolding).
+    addKicker(x, z, dirx, dirz, len, height, width, tag, lift) {
       const T = this.terrain;
+      lift = lift == null ? 0.4 : lift;
       const yaw = Math.atan2(dirx, dirz);
       const k = { x, z, dirx, dirz, len, height, width, tag, yaw };
       const groundAt = (u) => T.rawHeight(x + dirx * u, z + dirz * u);
       const y0 = groundAt(0);
-      // the ramp rises from the ground line at its start; slope of the ground
-      // under it is kept by measuring relative to a straight line
       const yEnd = groundAt(len);
       k.y0 = y0;
-      k.slope = (y0 - yEnd) / len;
+      k.slope = Math.max(0, (y0 - yEnd) / len);
+      const bs = k.slope * (1 - lift);
+      k.baseSlope = bs;
       T.addFeature({
         minx: x - len - width, maxx: x + len + width, minz: z - len - width, maxz: z + len + width,
         height(px, pz) {
@@ -613,22 +617,20 @@
           const u = dx * dirx + dz * dirz;
           const v = -dx * dirz + dz * dirx;
           if (u < 0 || u > len + 0.6 || Math.abs(v) > width / 2 + 0.6) return 0;
-          let hh = u <= len ? height * Math.pow(u / len, 1.6) : height * (1 - (u - len) / 0.6);
+          const hh = u <= len ? height * Math.pow(u / len, 1.6) : height * (1 - (u - len) / 0.6);
           const side = 1 - GS.smooth(width / 2, width / 2 + 0.6, Math.abs(v));
-          // relative to the straight base line between start and end
-          const base = y0 - k.slope * u;
+          const base = y0 - bs * Math.min(u, len);
           const ground = T.rawHeight(px, pz);
           return Math.max(0, (base + hh) - ground) * side;
         },
       });
-      // mesh: build in local space following the base line slope
-      const mesh = P.kicker(len, height, width, this.theme.groomed);
-      // shear so local z follows the sloped base line exactly
+      const depth = 0.4 + (k.slope - bs) * len;
+      const mesh = P.kicker(len, height, width, this.theme.groomed, depth);
       const m = M.create();
       M.translate(m, x, y0, z);
       M.rotY(m, yaw);
       const sh = M.create();
-      sh[9] = -k.slope;
+      sh[9] = -bs;
       const out = M.create();
       M.mul(out, m, sh);
       this.addStaticM(mesh, out, x, z);
@@ -663,7 +665,7 @@
         const t = seq[i];
         if (t[0] === 'k') {
           const sz = +t[1];
-          this.addKicker(x, z, q.tx, q.tz, 5 + sz * 2, 1 + sz * 0.7, 5 + sz, 'park');
+          this.addKicker(x, z, q.tx, q.tz, 5 + sz * 2, 1 + sz * 0.7, 5 + sz, 'park', 0.35);
         } else {
           this.addGrind(x, z, q.tx, q.tz, t === 'rail' ? 12 : 10, t === 'rail' ? 0.7 : 0.55, t);
         }
@@ -888,6 +890,7 @@
           this.treeCount++;
         }
       }
+      this._dressCliffs(rockProtos, r);
       // rocks
       const nr = Math.floor((this.W * this.L) / 2600 * (th.rocks || 0.3));
       for (let k = 0; k < nr; k++) {
@@ -902,6 +905,41 @@
         this.addInstance(pr, px, T.rawHeight(px, pz) - 0.3 * sz, pz, r() * 6.28, sz, sz, sz, 1);
         if (sz > 0.8) this.addObstacle({ x: px, z: pz, r: 0.9 * sz, top: 0.9 * sz, kind: 'rock', s: sz });
       }
+    }
+
+    // Boulders on steep faces so cliffs read as rock, not smeared colour.
+    _dressCliffs(rockProtos, r) {
+      const T = this.terrain;
+      let n = 0;
+      for (let z = 20; z < this.L - 20; z += 9) {
+        for (let x = 60; x < this.W - 60; x += 9) {
+          const px = x + (r() - 0.5) * 8, pz = z + (r() - 0.5) * 8;
+          const sl = T.slopeAt(px, pz);
+          if (sl < 0.95 || r() > 0.55) continue;
+          if (T.pisteDistAt(px, pz) < 4) continue;
+          if (!this._clearOfStructures(px, pz)) continue;
+          const sz = 1.4 + r() * 2.6 * Math.min(1.6, sl);
+          const pr = rockProtos[(r() * rockProtos.length) | 0];
+          this.addInstance(pr, px, T.rawHeight(px, pz) - 0.5 * sz, pz, r() * 6.28, sz * 1.3, sz * (0.7 + r() * 0.5), sz * 1.1, 1);
+          if (sz > 1.2) this.addObstacle({ x: px, z: pz, r: 1.0 * sz, top: 1.0 * sz, kind: 'rock', s: sz });
+          n++;
+        }
+      }
+      // rock walls along the cliff bands
+      for (const c of T.cliffList || []) {
+        for (let x = c.x0 + 6; x < c.x1 - 6; x += 3.2 + r() * 2) {
+          const z = T.cliffZ(c, x) + (r() - 0.3) * 3;
+          if (T.pisteDistAt(x, z) < 6) continue;
+          if (!this._clearOfStructures(x, z)) continue;
+          const sz = 2.2 + r() * 2.4 * Math.min(1.5, c.drop / 10);
+          const pr = rockProtos[(r() * rockProtos.length) | 0];
+          const y = T.rawHeight(x, z);
+          this.addInstance(pr, x, y - 0.3 * sz, z, r() * 6.28, sz * 1.4, sz * (0.9 + r() * 0.6), sz * 1.2, 1);
+          this.addObstacle({ x, z, r: 1.1 * sz, top: 1.1 * sz, kind: 'rock', s: sz });
+          n++;
+        }
+      }
+      this.cliffRocks = n;
     }
 
     _clearOfStructures(x, z) {

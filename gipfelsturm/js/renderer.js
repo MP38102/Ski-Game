@@ -541,6 +541,7 @@
         gl.uniform1f(u.uShadowOn, this.shadowOn ? 1 : 0);
       }
       if (u.uSnowCol) gl.uniform3fv(u.uSnowCol, env.snowCol);
+      if (u.uRock) { gl.uniform3fv(u.uRock, env.rockCol); gl.uniform3fv(u.uRock2, env.rockCol2); }
       if (u['uLamps[0]']) {
         gl.uniform4fv(u['uLamps[0]'], this.lampData);
         gl.uniform1f(u.uLampOn, this.lampOn);

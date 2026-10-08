@@ -20,7 +20,7 @@
 
   const WEATHER = {
     clear: { cloud: 0, snow: 0, fog: 0, wind: 0.3 },
-    cloudy: { cloud: 0.6, snow: 0, fog: 0.25, wind: 0.5 },
+    cloudy: { cloud: 0.6, snow: 0, fog: 0.1, wind: 0.5 },
     snow: { cloud: 0.75, snow: 0.55, fog: 0.4, wind: 0.6 },
     fog: { cloud: 0.8, snow: 0.05, fog: 1, wind: 0.2 },
     storm: { cloud: 1, snow: 1, fog: 0.75, wind: 1 },
@@ -49,6 +49,8 @@
       this.gndCol = new Float32Array(3);
       this.fogCol = new Float32Array(3);
       this.snowCol = new Float32Array([0.95, 0.97, 1]);
+      this.rockCol = new Float32Array([0.43, 0.45, 0.48]);
+      this.rockCol2 = new Float32Array([0.54, 0.56, 0.59]);
       this.trackCol = new Float32Array([0.42, 0.55, 0.75]);
       this.flakeCol = new Float32Array([1, 1, 1]);
       this.fogDen = 0.002;
@@ -64,6 +66,10 @@
 
     setTheme(theme) {
       this.theme = theme;
+      if (theme && theme.rock) {
+        this.rockCol.set(GS.hexToRgb(theme.rock));
+        this.rockCol2.set(GS.hexToRgb(theme.rock2 || theme.rock));
+      }
     }
 
     setWeather(name, instant) {
@@ -118,22 +124,21 @@
         fog = mix(fog, tint, (th.tintAmt || 0.15) * 1.2);
       }
 
-      // sun path: rises in the east (+x), sets west, always from the
-      // camera side (+z) so slopes facing the player are lit.
+      // sun path: rises in the east (+x), passes on the camera side (+z)
+      // and sets in the west; elevation 22° .. 64°.
       const day = GS.clamp((h - 6) / 13, 0, 1);
       const night = h < 5.5 || h > 20 ? 1 : h < 7 ? 1 - (h - 5.5) / 1.5 : h > 18.5 ? (h - 18.5) / 1.5 : 0;
       this.night = GS.clamp(night, 0, 1);
-      let ang = Math.PI * (0.12 + day * 0.76);
-      let elev = Math.sin(day * Math.PI) * 0.95 + 0.18;
+      let az = Math.PI * (0.15 + day * 0.7);
+      let el = (22 + 42 * Math.sin(day * Math.PI)) * Math.PI / 180;
       if (this.night > 0.5) {
-        // moon
         const nt = ((h + 24 - 20) % 24) / 9.5;
-        ang = Math.PI * (0.2 + nt * 0.6);
-        elev = 0.75;
+        az = Math.PI * (0.25 + nt * 0.5);
+        el = 50 * Math.PI / 180;
       }
-      const sx = Math.cos(ang) * 1.1, sy = Math.max(0.3, elev * 0.62), sz = 0.42 + Math.sin(ang) * 0.3;
-      const sl = Math.hypot(sx, sy, sz);
-      this.sunDir[0] = sx / sl; this.sunDir[1] = sy / sl; this.sunDir[2] = sz / sl;
+      this.sunDir[0] = Math.cos(el) * Math.cos(az);
+      this.sunDir[1] = Math.sin(el);
+      this.sunDir[2] = Math.cos(el) * Math.sin(az);
 
       // weather
       const w = this.w;
@@ -160,8 +165,8 @@
       }
 
       for (let i = 0; i < 3; i++) {
-        this.sunCol[i] = sun[i] * sunI * 0.9;
-        this.skyCol[i] = sky[i] * 0.44 * ambBoost;
+        this.sunCol[i] = sun[i] * sunI * 0.86;
+        this.skyCol[i] = sky[i] * 0.5 * ambBoost;
         this.gndCol[i] = gnd[i] * 0.4 * ambBoost;
         this.fogCol[i] = fog[i];
       }
@@ -171,7 +176,7 @@
       this.trackCol[1] = 0.52 - snowNight * 0.3;
       this.trackCol[2] = 0.74 - snowNight * 0.35;
       const baseFog = th.fog != null ? th.fog : 0.0018;
-      this.fogDen = baseFog + w.fog * 0.0125 + w.snow * 0.003;
+      this.fogDen = baseFog + w.fog * 0.0105 + w.snow * 0.0025;
       this.visibility = 1 - GS.clamp(w.fog * 0.8 + w.snow * 0.3, 0, 0.9);
       this.snowfall = GS.clamp(w.snow, 0, 1);
       this.storm = GS.clamp((w.wind - 0.5) * 2, 0, 1);

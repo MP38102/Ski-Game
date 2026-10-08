@@ -313,7 +313,8 @@
     return b.build();
   };
 
-  P.kicker = (len, height, width, snowHex) => {
+  P.kicker = (len, height, width, snowHex, depth) => {
+    const D = -(depth || 0.3);
     // shape must match World kicker profile: y = h * (u/len)^1.6
     const b = new MB();
     const snow = snowHex || '#eef3fb';
@@ -323,10 +324,15 @@
       const u0 = (k / segs) * len, u1 = ((k + 1) / segs) * len;
       const y0 = prof(u0), y1 = prof(u1);
       b.col(snow).quad([-width / 2, y0, u0], [-width / 2, y1, u1], [width / 2, y1, u1], [width / 2, y0, u0]);
-      b.col('#dfe8f3').quad([width / 2, -0.3, u0], [width / 2, y0, u0], [width / 2, y1, u1], [width / 2, -0.3, u1]);
-      b.col('#dfe8f3').quad([-width / 2, -0.3, u1], [-width / 2, y1, u1], [-width / 2, y0, u0], [-width / 2, -0.3, u0]);
+      const side = depth > 1 ? '#b9875a' : '#dfe8f3';
+      b.col(side).quad([width / 2, D * (u0 / len), u0], [width / 2, y0, u0], [width / 2, y1, u1], [width / 2, D * (u1 / len), u1]);
+      b.col(side).quad([-width / 2, D * (u1 / len), u1], [-width / 2, y1, u1], [-width / 2, y0, u0], [-width / 2, D * (u0 / len), u0]);
     }
-    b.col('#cfdbe9').quad([width / 2, -0.3, len], [width / 2, height, len], [-width / 2, height, len], [-width / 2, -0.3, len]);
+    b.col(depth > 1 ? '#9c6b42' : '#cfdbe9').quad([width / 2, D, len], [width / 2, height, len], [-width / 2, height, len], [-width / 2, D, len]);
+    if (depth > 1) {
+      // scaffolding legs under a lifted big-air ramp
+      for (const sx of [-width / 2 + 0.3, width / 2 - 0.3]) for (const u of [len * 0.5, len - 0.3]) b.col('#5a646f').box(sx, D * (u / len) / 2, u, 0.25, Math.abs(D * (u / len)), 0.25);
+    }
     b.col('#2f6feb').box(0, height + 0.02, len - 0.12, width, 0.05, 0.24);
     return b.build();
   };

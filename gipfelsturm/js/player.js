@@ -115,6 +115,17 @@
         this.x = sj.x; this.vx = 0; this.heading = 0;
         inp = Object.assign({}, inp, { steer: 0, aim: null, brake: false, pivot: 0, tuck: true });
       }
+      // leaving a lip or a crest: take off before the velocity is projected
+      // onto the slope behind it
+      {
+        const ax = this.x + this.vx * dt, az = this.z + this.vz * dt;
+        const sp0 = Math.hypot(this.vx, this.vy, this.vz);
+        if (sp0 > 3 && this.y + this.vy * dt - T.heightAt(ax, az) > 0.035) {
+          this.x = ax; this.z = az; this.y += this.vy * dt;
+          this._takeoff(false);
+          return;
+        }
+      }
       const n = T.normalAt(this.x, this.z, this._n || (this._n = [0, 0, 0]));
       const surf = T.surfAt(this.x, this.z);
       this.contact = surf;
@@ -298,6 +309,8 @@
     }
 
     _takeoff(ollie) {
+      const T = this.game.world.terrain;
+      this.fromKicker = T.features.length > 0 && T._featHeight(this.x - this.vx * 0.05, this.z - this.vz * 0.05) > 0.2;
       this.mode = 'air';
       this.ground = false;
       this.spin = 0; this.flip = 0; this.spinV = 0; this.flipV = 0;
@@ -516,7 +529,7 @@
       }
       if (airT > 1.1) {
         const dropH = this.airPeak - this.y;
-        tricks.push({ name: dropH > 9 ? L('cliffDrop') : L('bigAir'), pts: Math.round(airT * 90 + Math.max(0, dropH) * 12) });
+        tricks.push({ name: dropH > 9 && !this.fromKicker ? L('cliffDrop') : L('bigAir'), pts: Math.round(airT * 90 + Math.max(0, dropH) * 12) });
       }
       return tricks;
     }

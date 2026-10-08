@@ -120,8 +120,8 @@ void main() {
     return;
   }
   if (kind > 0.5) {
-    float j = (hash3(floor(vWP * 1.7)) - 0.5) * 0.28;
-    float cover = smoothstep(0.66, 0.8, n.y + j * 0.5) * vSnow;
+    float j = (sin(vWP.x * 1.3 + vWP.y * 0.7) + sin(vWP.z * 1.7 - vWP.y * 0.9)) * 0.045;
+    float cover = smoothstep(0.62, 0.74, n.y + j) * vSnow;
     alb = mix(alb, uSnowCol, cover);
   }
   float sh = shadowAt(vWP, n);
@@ -133,6 +133,8 @@ void main() {
 precision highp float;
 ${LIGHT}
 uniform float uTime;
+uniform vec3 uRock;
+uniform vec3 uRock2;
 in vec3 vWP;
 in vec3 vN;
 in vec4 vCol;
@@ -155,6 +157,14 @@ void main() {
   float fw = fwidth(vWP.x * 3.2);
   float cord = sin(vWP.x * 20.0 + sin(vWP.z * 0.07) * 4.0);
   alb *= 1.0 - groomed * 0.026 * (0.5 + 0.5 * cord) * (1.0 - smoothstep(0.25, 0.7, fw));
+  // exposed rock on steep faces, decided per pixel for crisp edges
+  float rn = sin(vWP.x * 0.31 + vWP.z * 0.17) * 0.5 + sin(vWP.z * 0.53 - vWP.x * 0.23) * 0.5;
+  float steep = 1.0 - smoothstep(0.66, 0.71, vN.y / length(vN) + rn * 0.035);
+  float rockMix = steep * (1.0 - groomed);
+  if (rockMix > 0.0) {
+    float strata = 0.5 + 0.5 * sin(vWP.y * 1.6 + rn * 2.0);
+    alb = mix(alb, mix(uRock, uRock2, strata) * (0.85 + 0.15 * rn), rockMix);
+  }
   float sh = shadowAt(vWP, n);
   vec3 c = lightIt(alb, n, sh) + alb * lampLight(vWP);
   // glitter on sunlit snow

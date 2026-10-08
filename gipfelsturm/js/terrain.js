@@ -96,6 +96,10 @@
       }
     }
 
+    cliffZ(c, x) {
+      return c.z + this.noise.n2(x / 40, c.z) * 6;
+    }
+
     _cliffs() {
       const g = this.def.gen;
       const r = GS.rng(this.def.seed * 7 + 3);
@@ -306,9 +310,15 @@
 
     // Smooth gradient (bilinear of central differences) for physics.
     gradAt(x, z, out) {
+      // smooth terrain gradient + sharp gradient for features (kicker lips)
       const e = 0.9;
-      out[0] = (this.heightAt(x + e, z) - this.heightAt(x - e, z)) / (2 * e);
-      out[1] = (this.heightAt(x, z + e) - this.heightAt(x, z - e)) / (2 * e);
+      out[0] = (this.rawHeight(x + e, z) - this.rawHeight(x - e, z)) / (2 * e);
+      out[1] = (this.rawHeight(x, z + e) - this.rawHeight(x, z - e)) / (2 * e);
+      if (this.features.length && this._featHeight(x, z) > 0) {
+        const f = 0.15;
+        out[0] += (this._featHeight(x + f, z) - this._featHeight(x - f, z)) / (2 * f);
+        out[1] += (this._featHeight(x, z + f) - this._featHeight(x, z - f)) / (2 * f);
+      }
       return out;
     }
 
@@ -377,13 +387,9 @@
           const gr = this.groom[id];
           if (gr > 0) c = GS.mixRgb(c, groomC, gr);
           if (this.ice[id] > 0) c = GS.mixRgb(c, iceC, GS.smooth(0.3, 0.7, this.ice[id]) * (1 - gr));
-          const rk = GS.smooth(0.82, 1.25, slope + N.n2(x / 9, z / 9) * 0.18) * (1 - gr);
-          if (rk > 0) {
-            const rv = N.fbm(x / 6, z / 14, 2);
-            c = GS.mixRgb(c, GS.mixRgb(rock, rock2, 0.5 + rv), rk);
-          }
+          void rock; void rock2;
           // concavity shading
-          const ao = GS.clamp(1 + (this.h[id] - this.blurH[id]) * 0.035, 0.82, 1.04);
+          const ao = GS.clamp(1 + (this.h[id] - this.blurH[id]) * 0.02, 0.9, 1.03);
           col[id * 4] = c[0] * ao; col[id * 4 + 1] = c[1] * ao; col[id * 4 + 2] = Math.min(1.05, c[2] * (ao * 0.6 + 0.4));
           col[id * 4 + 3] = gr;
         }

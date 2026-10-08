@@ -95,7 +95,7 @@
       id: 'vulkan', seed: 6606, W: 1088, L: 2176, unlock: 50,
       name: 'Vulkan Ignis', region: { de: 'Kamtschatka', en: 'Kamchatka' },
       desc: { de: 'Schwarzer Fels, dampfende Fumarolen und ein Krater am Gipfel.', en: 'Black rock, steaming fumaroles and a crater at the summit.' },
-      hour: 17, weather: 'cloudy', music: 'volcano', diff: 3, vents: true,
+      hour: 16, weather: 'cloudy', music: 'volcano', diff: 3, vents: true,
       theme: { trees: { dead: 3, pine: 1 }, pine: ['#2b4a3c', '#334f3f'], rock: '#2b2827', rock2: '#3d3634', treeDensity: 0.28, treeline: 0.5, rocks: 0.6, deco: 'volcano', tint: '#ff7b47', tintAmt: 0.12, snow: '#eef0f3', palette: ['#ff5400', '#ffbd00', '#2b2827'] },
       gen: { slopes: [0.15, 0.62, 0.55, 0.42, 0.32, 0.18, 0.05], big: 40, mid: 7, small: 1, ridge: 34, bowl: 20, cliffs: 4, cliffDrop: 10 },
       lifts: [
@@ -112,7 +112,7 @@
       id: 'canyon', seed: 7707, W: 1152, L: 2048, unlock: 66,
       name: 'Rotfels-Canyon', region: { de: 'Utah · USA', en: 'Utah · USA' },
       desc: { de: 'Schnee auf rotem Sandstein, Tafelberge und glühende Sonnenuntergänge.', en: 'Snow on red sandstone, mesas and glowing sunsets.' },
-      hour: 18.2, weather: 'clear', music: 'canyon', diff: 3,
+      hour: 16.6, weather: 'clear', music: 'canyon', diff: 3,
       theme: { trees: { shrub: 2, pine: 2 }, pine: ['#3f5a3a', '#4b6a40', '#36503a'], rock: '#a4482e', rock2: '#c46a3f', treeDensity: 0.3, treeline: 0.3, rocks: 0.55, deco: 'canyon', tint: '#ff9f68', tintAmt: 0.12, snow: '#fbf6f2', palette: ['#ff7b3a', '#ffd1a1', '#a4482e'] },
       gen: { slopes: [0.5, 0.42, 0.36, 0.3, 0.24, 0.14, 0.04], big: 30, mid: 8, small: 0.8, ridge: 26, bowl: 26, cliffs: 6, cliffDrop: 13 },
       lifts: [
@@ -197,7 +197,7 @@
       id: 'himmel', seed: 12312, W: 1216, L: 2560, unlock: 176,
       name: 'Himmelsleiter', region: { de: 'Himalaya', en: 'Himalaya' },
       desc: { de: 'Das Finale: die längsten Abfahrten der Welt, Gebetsfahnen und dünne Luft.', en: 'The finale: the world’s longest runs, prayer flags and thin air.' },
-      hour: 8, weather: 'clear', music: 'himalaya', diff: 4,
+      hour: 9.6, weather: 'clear', music: 'himalaya', diff: 4,
       theme: Object.assign({ rock: '#5f5a57', rock2: '#7c746e', treeDensity: 0.3, treeline: 0.66, rocks: 0.55, deco: 'himalaya', palette: ['#ffd23f', '#2e6fd8', '#d62828'] }, ALPINE),
       gen: { slopes: [0.9, 0.72, 0.56, 0.44, 0.34, 0.22, 0.05], big: 56, mid: 9, small: 1, ridge: 44, bowl: 22, cliffs: 6, cliffDrop: 14, ice: 0.6 },
       lifts: [
