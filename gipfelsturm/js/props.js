@@ -334,6 +334,14 @@
       for (const sx of [-width / 2 + 0.3, width / 2 - 0.3]) for (const u of [len * 0.5, len - 0.3]) b.col('#5a646f').box(sx, D * (u / len) / 2, u, 0.25, Math.abs(D * (u / len)), 0.25);
     }
     b.col('#2f6feb').box(0, height + 0.02, len - 0.12, width, 0.05, 0.24);
+    // shaping lines across the ramp make the slope readable from above
+    for (const f of [0.35, 0.6, 0.82]) {
+      const u = f * len, y = prof(u) + 0.015;
+      b.col('#c4d3e6').box(0, y, u, width * 0.92, 0.02, 0.12);
+    }
+    // coloured side boards
+    b.col('#ff6b2c').box(width / 2 + 0.03, height * 0.55, len * 0.78, 0.06, 0.18, len * 0.4);
+    b.col('#ff6b2c').box(-width / 2 - 0.03, height * 0.55, len * 0.78, 0.06, 0.18, len * 0.4);
     return b.build();
   };
 
