@@ -14,6 +14,10 @@
 
 ## Spielen
 
+**Online spielen:** https://mp38102.github.io/Ski-Game/gipfelsturm/ (GitHub Pages, wird bei jedem Push auf `main` automatisch aktualisiert).
+
+Lokal:
+
 ```bash
 npm install          # einmalig, im Repository-Hauptordner
 npm run serve        # dann http://localhost:8080/gipfelsturm/ öffnen

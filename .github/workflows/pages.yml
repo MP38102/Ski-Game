@@ -1,4 +1,5 @@
-# Publishes website/ (incl. the playable web version under /play) to GitHub Pages.
+# Publishes website/ (incl. the playable web version under /play) and the
+# Gipfelsturm game (under /gipfelsturm) to GitHub Pages.
 # Enable once under Settings → Pages → Source: "GitHub Actions".
 name: Deploy website
 on:
@@ -21,8 +22,14 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: actions/configure-pages@v5
+      - name: Assemble site
+        run: |
+          mkdir _site
+          cp -r website/. _site/
+          cp -r gipfelsturm _site/gipfelsturm
+          rm -rf _site/gipfelsturm/tools
       - uses: actions/upload-pages-artifact@v3
         with:
-          path: website
+          path: _site
       - id: deployment
         uses: actions/deploy-pages@v4

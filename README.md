@@ -53,4 +53,4 @@ Nach Änderungen in `game/` immer `npm run sync` ausführen. Dadurch landet die 
 
 ## Website veröffentlichen
 
-Der Workflow `.github/workflows/pages.yml` veröffentlicht `website/` bei jedem Push auf `main` auf GitHub Pages. Dafür muss GitHub Pages einmalig aktiviert werden (Settings → Pages → Source: GitHub Actions). **Vor dem Livegang müssen im Impressum und in der Datenschutzerklärung die gelb markierten Platzhalter ausgefüllt werden.**
+Der Workflow `.github/workflows/pages.yml` veröffentlicht `website/` und das Spiel `gipfelsturm/` (unter `/gipfelsturm/`, also https://mp38102.github.io/Ski-Game/gipfelsturm/) bei jedem Push auf `main` auf GitHub Pages. Dafür muss GitHub Pages einmalig aktiviert werden (Settings → Pages → Source: GitHub Actions). **Vor dem Livegang müssen im Impressum und in der Datenschutzerklärung die gelb markierten Platzhalter ausgefüllt werden.**
