@@ -125,6 +125,8 @@
         <div class="row-set"><span data-i18n="timeOfDay"></span><div class="seg wrap" id="seg-tod"></div></div>
         <div class="row-set"><span data-i18n="weather"></span><div class="seg wrap" id="seg-weather"></div></div>
         <div class="row-set"><span data-i18n="npcDensity"></span><div class="seg" id="seg-npc"></div></div>
+        <button class="btn btn-primary" id="btn-retro"><span data-i18n="retro"></span> 🕹️</button>
+        <p class="small muted" data-i18n="retroHint"></p>
         <button class="btn btn-primary" id="btn-observe"><span data-i18n="observe"></span></button>
         <p class="small muted" data-i18n="observeHint"></p>
       </div>
@@ -207,6 +209,18 @@
     <div class="map-pop hidden" id="map-pop"></div>
   </section>
 
+  <!-- Retro trials -->
+  <section id="screen-retro" class="screen panel-screen hidden">
+    <div class="panel wide">
+      <header><button class="back" data-back>‹</button><h2 data-i18n="retro"></h2><div class="pill light"><span class="ico coin">◆</span><b class="v-credits">0</b></div></header>
+      <p class="small muted" data-i18n="retroHint" style="margin:0"></p>
+      <div class="seg" id="retro-seg"><button data-kind="side" data-i18n="mini_side"></button><button data-kind="top" data-i18n="mini_top"></button></div>
+      <div id="retro-list" class="retro-list"></div>
+    </div>
+  </section>
+  <canvas id="mini-canvas" class="mini hidden"></canvas>
+  <button id="mini-exit" class="round-btn mini-exit hidden" aria-label="Exit">✕</button>
+
   <!-- Observe -->
   <section id="screen-observe" class="observe hidden">
     <button class="btn btn-ghost" id="btn-observe-exit" data-i18n="exitObserve"></button>
@@ -264,6 +278,7 @@
   <script src="js/art.js"></script>
   <script src="js/map.js"></script>
   <script src="js/preview.js"></script>
+  <script src="js/minigames.js"></script>
   <script src="js/game.js"></script>
   <script src="js/ui.js"></script>
   <script src="js/main.js"></script>

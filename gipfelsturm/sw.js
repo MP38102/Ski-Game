@@ -1,7 +1,7 @@
 // Offline cache for Gipfelsturm (web / home-screen app).
 const VERSION = 'gipfelsturm-v1.0.0';
 const JS = ['util', 'math3d', 'mesh', 'shaders', 'renderer', 'env', 'terrain', 'props', 'mountains', 'i18n', 'progress', 'characters',
-  'challenges', 'world', 'player', 'npc', 'camera', 'input', 'audio', 'art', 'map', 'preview', 'game', 'ui', 'main'];
+  'challenges', 'world', 'player', 'npc', 'camera', 'input', 'audio', 'art', 'map', 'preview', 'minigames', 'game', 'ui', 'main'];
 const FILES = ['./', 'index.html', 'style.css', 'manifest.webmanifest', 'img/emblem.svg', 'img/favicon.svg',
   'fonts/fredoka-latin-500-normal.woff2', 'fonts/fredoka-latin-600-normal.woff2', 'fonts/fredoka-latin-700-normal.woff2',
   'icons/icon-180.png', 'icons/icon-192.png', 'icons/icon-512.png'].concat(JS.map((f) => 'js/' + f + '.js'));

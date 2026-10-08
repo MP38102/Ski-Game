@@ -163,7 +163,10 @@
         const target = inp.steer > 0 ? Math.PI / 2 + 0.4 : -Math.PI / 2 - 0.4;
         let base = this.heading;
         if (this.switch) base = GS.wrapAngle(this.heading + Math.PI);
-        const d = GS.angleTo(base, target);
+        base = GS.wrapAngle(base);
+        // turn through the fall line unless the rider already faces uphill
+        let d = target - base;
+        if (Math.abs(d) > Math.PI + 1) d = GS.angleTo(base, target);
         const stepA = turnRate * Math.abs(inp.steer) * dt;
         const nb = base + GS.clamp(d, -stepA, stepA);
         this.heading = this.switch ? GS.wrapAngle(nb + Math.PI) : GS.wrapAngle(nb);
@@ -840,7 +843,7 @@
         this.x = tmp.x; this.z = tmp.z;
         this.y = tmp.y - l.cfg.hang + (l.type === 'gondola' ? -0.3 : 0.05) - (l.type === 'gondola' ? 0 : 0.5);
       }
-      l.boost = inp.boost ? 6 : 1;
+      l.boost = inp.boost ? 6 : 2.4;
     }
 
     exitLift() {

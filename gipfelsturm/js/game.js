@@ -199,7 +199,7 @@
       this.last = ts;
       this.frameMs = this.frameMs * 0.95 + dt * 1000 * 0.05;
       try {
-        if (this.world && this.state !== 'loading') {
+        if (this.world && this.state !== 'loading' && this.state !== 'mini') {
           this.update(dt);
           this.draw();
         }

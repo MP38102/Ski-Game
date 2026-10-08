@@ -423,9 +423,9 @@
     _buildLifts() {
       const T = this.terrain;
       for (const l of this.lifts) {
-        const cfg = l.type === 'gondola' ? { hang: 2.7, clear: 3.2, pyl: 12, spacing: 42, speed: 7 }
-          : l.type === 'tbar' ? { hang: 0, clear: 4.4, pyl: 6.5, spacing: 14, speed: 4.5 }
-            : { hang: 3.3, clear: 2.6, pyl: 9.5, spacing: 20, speed: 5.5 };
+        const cfg = l.type === 'gondola' ? { hang: 2.7, clear: 3.2, pyl: 12, spacing: 42, speed: 9 }
+          : l.type === 'tbar' ? { hang: 0, clear: 4.4, pyl: 6.5, spacing: 14, speed: 6 }
+            : { hang: 3.3, clear: 2.6, pyl: 9.5, spacing: 20, speed: 7.5 };
         l.cfg = cfg;
         const g = (u) => T.rawHeight(l.B.x + l.dir.x * u, l.B.z + l.dir.z * u);
         const stH = l.type === 'tbar' ? 5.4 : 4.4;
@@ -686,19 +686,20 @@
       const order = this.lifts.slice().sort((a, b) => a.T.z - b.T.z);
       for (let k = 0; k < n; k++) {
         const l = order[(k + 1) % order.length];
-        for (let tries = 0; tries < 20; tries++) {
-          const sx = l.T.x + (r() - 0.5) * 120, sz = l.T.z + 30 + r() * 60;
+        for (let tries = 0; tries < 80; tries++) {
+          const sx = l.T.x + (r() - 0.5) * 160, sz = l.T.z + 25 + r() * 90;
           const ang = (r() - 0.5) * 1.6;
-          const len = 260 + r() * 200;
+          const len = 200 + r() * 220;
           const ex = sx + Math.sin(ang) * len, ez = sz + Math.cos(ang) * len;
-          if (!this._freeSpot(sx, sz, 6, false) || !this._freeSpot(ex, ez, 6, false)) continue;
+          if (!this._freeSpot(sx, sz, 3, true) || !this._freeSpot(ex, ez, 3, true)) continue;
+          if (this.terrain.pisteDistAt(sx, sz) < 3 || this.terrain.pisteDistAt(ex, ez) < 3) continue;
           if (ex < 140 || ex > this.W - 140 || ez > this.L - 60) continue;
           const ya = T.rawHeight(sx, sz) + 9, yb = T.rawHeight(ex, ez) + 4;
-          if (ya - yb < 25) continue;
+          if (ya - yb < 18) continue;
           let ok = true;
           for (let t = 0.05; t < 1; t += 0.05) {
             const y = GS.lerp(ya, yb, t) - Math.sin(t * Math.PI) * len * 0.02;
-            if (y - 6 < T.rawHeight(GS.lerp(sx, ex, t), GS.lerp(sz, ez, t))) { ok = false; break; }
+            if (y - 4 < T.rawHeight(GS.lerp(sx, ex, t), GS.lerp(sz, ez, t))) { ok = false; break; }
           }
           if (!ok) continue;
           const z = { ax: sx, az: sz, ay: ya, bx: ex, bz: ez, by: yb, len: Math.hypot(ex - sx, ez - sz), sag: len * 0.02 };

@@ -129,7 +129,7 @@
     }
 
     render(R, cam) {
-      const range = 120;
+      const range = Math.max(120, Math.min(320, this.game.camera.dist * 1.4));
       for (const n of this.list) {
         if (Math.abs(n.x - cam[0]) > range || Math.abs(n.z - cam[2]) > range) continue;
         const l = n.lift;

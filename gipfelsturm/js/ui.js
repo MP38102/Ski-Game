@@ -4,7 +4,7 @@
 (function (GS) {
   const $ = (id) => document.getElementById(id);
   const t = (k, v) => GS.t(k, v);
-  const SCREENS = ['title', 'mountains', 'gear', 'modes', 'settings', 'achievements', 'howto', 'pause', 'map', 'observe'];
+  const SCREENS = ['title', 'mountains', 'gear', 'modes', 'settings', 'achievements', 'howto', 'pause', 'map', 'observe', 'retro'];
 
   const UI = {
     game: null,
@@ -28,6 +28,9 @@
       $('btn-pabort').addEventListener('click', () => game.abortRun());
       $('btn-home').addEventListener('click', () => { game.endRun(); game.enterAttract(); this.show('title'); });
       $('btn-observe').addEventListener('click', () => this.observe());
+      $('btn-retro').addEventListener('click', () => { GS.Audio.play('ui'); this.open('retro'); });
+      $('mini-exit').addEventListener('click', () => { if (this.mini) this.mini.stop(true); });
+      document.querySelectorAll('#retro-seg button').forEach((b) => b.addEventListener('click', () => { this.retroKind = b.dataset.kind; this._renderRetro(); }));
       $('btn-observe-exit').addEventListener('click', () => { game.enterAttract(); this.show('title'); });
       $('map-close').addEventListener('click', () => this.closeMap());
       $('map-zin').addEventListener('click', () => this._mapZoom(1.35));
@@ -101,6 +104,49 @@
       if (name === 'achievements') this._renderAchievements();
       if (name === 'settings') this._settingsSync();
       if (name === 'modes') this._modesSync();
+      if (name === 'retro') this._renderRetro();
+    },
+
+    _renderRetro() {
+      const kind = this.retroKind || 'side';
+      document.querySelectorAll('#retro-seg button').forEach((b) => b.classList.toggle('on', b.dataset.kind === kind));
+      const d = GS.Progress.data;
+      const stars = (d.mini && d.mini[kind]) || [];
+      const list = $('retro-list');
+      list.innerHTML = '';
+      const n = GS.MINI_COUNTS[kind];
+      for (let i = 0; i < n; i++) {
+        const open = GS.settings.unlockAll || i === 0 || (stars[i - 1] || 0) > 0;
+        const st = stars[i] || 0;
+        const b = document.createElement('button');
+        b.className = 'lvl' + (open ? '' : ' locked');
+        b.innerHTML = `<span class="small muted">${t('level')}</span><b>${i + 1}</b><span class="st">${'★'.repeat(st)}<i>${'★'.repeat(3 - st)}</i></span>`;
+        b.onclick = () => {
+          if (!open) return;
+          GS.Audio.unlock();
+          GS.Audio.play('ui');
+          this.startMini(kind, i);
+        };
+        list.appendChild(b);
+      }
+      document.querySelectorAll('.v-credits').forEach((e) => { e.textContent = GS.fmtInt(GS.Progress.credits); });
+    },
+
+    startMini(kind, n) {
+      if (!this.mini) this.mini = new GS.Mini($('mini-canvas'), this);
+      const g = this.game;
+      this._prevState = g.state;
+      g.state = 'mini';
+      $('mini-exit').classList.remove('hidden');
+      this.mini.onExit = (res) => {
+        $('mini-exit').classList.add('hidden');
+        g.state = this._prevState === 'mini' ? 'title' : this._prevState;
+        this.show('retro');
+        this._renderRetro();
+        if (res) this.toast((res.credits ? '' : '') + t('miniDone', { n: res.stars, c: res.credits }), res.stars === 3 ? 'gold' : 'good');
+      };
+      for (const s2 of SCREENS) { const el = $('screen-' + s2); if (el) el.classList.add('hidden'); }
+      this.mini.start(kind, n);
     },
 
     back() {
