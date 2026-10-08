@@ -9,7 +9,8 @@
     "render": "node tools/render-assets.mjs",
     "sync": "node tools/sync.mjs",
     "build": "npm run brand && npm run render && npm run sync",
-    "serve": "npx http-server . -p 8080 -c-1"
+    "serve": "npx http-server . -p 8080 -c-1",
+    "gipfelsturm:assets": "node gipfelsturm/tools/build-assets.mjs"
   },
   "devDependencies": {
     "@fontsource/fredoka": "^5.0.0",
