@@ -153,16 +153,16 @@ async function coverAndVideo({ width, height, seed, o, coverFile, coverSize, vid
 
 const VIDEO_SECONDS = 18;
 const LANDSCAPE = {
-  seed: 11, tod: 0.47, zoom: 1.55, dx: 200, dy: 40, avBehind: 130, danger: 0, snow: 0.25,
+  seed: 11, tod: 0.47, zoom: 1.12, dx: 300, dy: 230, avBehind: 160, danger: 0, snow: 0.25,
   logo: 'right:70px;top:70px;transform:scale(1.55);transform-origin:top right;',
 };
 // Portrait media share the 2:3 ratio: video 1080x1620, cover 800x1200.
 const PORTRAIT = {
-  seed: 11, tod: 0.47, zoom: 1.75, dx: 70, dy: 60, avBehind: 120, danger: 0, snow: 0.25,
+  seed: 11, tod: 0.47, zoom: 1.45, dx: 90, dy: 170, avBehind: 140, danger: 0, snow: 0.25,
   logo: 'left:0;right:0;top:94px;display:flex;justify-content:center;transform:scale(1.31);transform-origin:top center;',
 };
 const SQUARE = {
-  seed: 11, tod: 0.47, zoom: 1.6, dx: 90, dy: 90, avBehind: 120, danger: 0, snow: 0.25,
+  seed: 11, tod: 0.47, zoom: 1.35, dx: 110, dy: 140, avBehind: 140, danger: 0, snow: 0.25,
   logo: 'left:0;right:0;top:46px;display:flex;justify-content:center;transform:scale(1.05);transform-origin:top center;',
 };
 
@@ -210,7 +210,7 @@ await shot('screenshot-4-night.png', { seed: 51, tod: 0.74, until: 'g.rider.mode
 await shot('screenshot-5-avalanche.png', {
   seed: 61, tod: 0.06,
   until: 'g.stats.dist > 200 && g.rider.mode === "ground" && g.rider.v > 520',
-  after: '(() => { const g = AR.game; g.avalanche.x = g.rider.x - 330; })()', settle: 3,
+  after: '(() => { const g = AR.game; g.avalanche.x = g.rider.x - 330; })()', settle: 8,
 });
 
 // ---------- menu screenshots ----------
