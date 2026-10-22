@@ -10,7 +10,10 @@
     "sync": "node tools/sync.mjs",
     "build": "npm run brand && npm run render && npm run sync",
     "serve": "npx http-server . -p 8080 -c-1",
-    "gipfelsturm:assets": "node gipfelsturm/tools/build-assets.mjs"
+    "gipfelsturm:assets": "node gipfelsturm/tools/build-assets.mjs",
+    "avalanche:build": "node avalanche-rider/tools/build.mjs",
+    "avalanche:assets": "node avalanche-rider/tools/store-assets.mjs",
+    "avalanche:test": "node avalanche-rider/tools/test.mjs"
   },
   "devDependencies": {
     "@fontsource/fredoka": "^5.0.0",

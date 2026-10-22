@@ -1,0 +1,210 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+  <meta name="theme-color" content="#14213D">
+  <meta name="description" content="Avalanche Rider – outrun the avalanche, backflip over crevasses and grind rails on an endless mountain.">
+  <title>Avalanche Rider</title>
+  <link rel="icon" type="image/svg+xml" href="img/icon.svg">
+  <link rel="preload" href="fonts/fredoka-latin-700-normal.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <canvas id="game" aria-label="Avalanche Rider"></canvas>
+
+  <!-- HUD -->
+  <div id="hud" class="hud hidden">
+    <div class="hud-left">
+      <div class="chip"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 21V4h2v1h11l-2.5 4L18 13H7v8z"/></svg><b id="hud-dist">0</b><span class="unit">m</span></div>
+      <div class="chip"><i class="coin" aria-hidden="true"></i><b id="hud-coins">0</b></div>
+      <div id="hud-powers" class="powers"></div>
+    </div>
+    <div class="hud-center">
+      <div id="hud-score" class="score">0</div>
+      <div id="hud-combo" class="combo hidden"><span>×<b id="hud-mult">2</b></span><i><em id="hud-combo-bar"></em></i></div>
+    </div>
+    <div class="hud-right">
+      <button id="btn-pause" class="icon-btn" data-i18n-label="paused" aria-label="Pause">
+        <svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><rect x="6" y="5" width="4" height="14" rx="1.5"/><rect x="14" y="5" width="4" height="14" rx="1.5"/></svg>
+      </button>
+    </div>
+    <div id="hud-avalanche" class="avalanche-warn hidden">
+      <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path d="M2 20c2-6 5-9 8-9 1-3 3-5 6-5 3 0 5 3 6 6v8z"/></svg>
+      <span data-i18n="avalanche"></span><b id="hud-av-dist">0 m</b>
+    </div>
+  </div>
+  <div id="hint" class="hint hidden" role="status"></div>
+
+  <!-- Loading -->
+  <section id="screen-loading" class="screen">
+    <div class="loading">
+      <h1 class="logo"><span class="l1">Avalanche</span><span class="l2">Rider</span></h1>
+      <div class="bar"><i></i></div>
+      <p data-i18n="loading">Loading…</p>
+    </div>
+  </section>
+
+  <!-- Title -->
+  <section id="screen-title" class="screen hidden">
+    <div class="title-grid">
+      <div class="title-main">
+        <h1 class="logo"><span class="l1">Avalanche</span><span class="l2">Rider</span></h1>
+        <button id="btn-play" class="btn btn-primary btn-xl">
+          <svg viewBox="0 0 24 24" width="28" height="28" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg>
+          <span data-i18n="play"></span>
+        </button>
+        <div class="title-stats">
+          <span><span data-i18n="best"></span> <b id="t-best">0</b></span>
+          <span class="dot" aria-hidden="true"></span>
+          <span><i class="coin" aria-hidden="true"></i> <b id="t-coins">0</b></span>
+        </div>
+        <div class="row">
+          <button id="btn-shop" class="btn">
+            <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path d="M4 7h16l-1.5 12.5a2 2 0 0 1-2 1.5h-9a2 2 0 0 1-2-1.5zM8.5 7a3.5 3.5 0 0 1 7 0" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linejoin="round"/></svg>
+            <span data-i18n="shop"></span>
+          </button>
+          <button id="btn-settings" class="btn btn-square" data-i18n-label="settings" aria-label="Settings">
+            <svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path d="M12 8.5a3.5 3.5 0 1 0 0 7 3.5 3.5 0 0 0 0-7zm8.2 4.7-.1-2.4 2-1.6-2-3.4-2.4.8a8 8 0 0 0-2-1.2L15.2 3h-4l-.5 2.4a8 8 0 0 0-2 1.2l-2.4-.8-2 3.4 2 1.6v2.4l-2 1.6 2 3.4 2.4-.8a8 8 0 0 0 2 1.2l.5 2.4h4l.5-2.4a8 8 0 0 0 2-1.2l2.4.8 2-3.4z" fill="currentColor"/></svg>
+          </button>
+        </div>
+        <p class="controls-hint" data-i18n="controlsShort"></p>
+      </div>
+      <aside class="card missions-card">
+        <header class="card-head">
+          <h2 data-i18n="missions"></h2>
+          <span id="t-rank" class="pill"></span>
+        </header>
+        <ul id="t-missions" class="missions"></ul>
+      </aside>
+    </div>
+  </section>
+
+  <!-- Pause -->
+  <section id="screen-pause" class="screen dim hidden">
+    <div class="card narrow">
+      <h2 data-i18n="paused"></h2>
+      <button id="btn-resume" class="btn btn-primary btn-xl" data-i18n="resume"></button>
+      <div class="row">
+        <button id="btn-p-settings" class="btn" data-i18n="settings"></button>
+        <button id="btn-endrun" class="btn" data-i18n="endRun"></button>
+      </div>
+    </div>
+  </section>
+
+  <!-- Continue offer (rewarded ad) -->
+  <section id="screen-continue" class="screen dim hidden">
+    <div class="card narrow continue">
+      <h2 id="c-title"></h2>
+      <p class="lead" data-i18n="continueQ"></p>
+      <button id="btn-continue" class="btn btn-reward btn-xl">
+        <svg class="video" viewBox="0 0 24 24" width="26" height="26" aria-hidden="true"><rect x="2" y="5" width="15" height="14" rx="3"/><path d="M17 10l5-3v10l-5-3z"/></svg>
+        <span class="stack"><span data-i18n="continueBtn"></span><small id="c-sub" data-i18n="watchVideo"></small></span>
+      </button>
+      <div class="timer" aria-hidden="true"><i id="c-timer"></i></div>
+      <button id="btn-nothanks" class="btn btn-link" data-i18n="noThanks"></button>
+    </div>
+  </section>
+
+  <!-- Game over -->
+  <section id="screen-over" class="screen dim hidden">
+    <div class="card over">
+      <div class="over-a">
+        <h2 id="o-title"></h2>
+        <div id="o-newbest" class="badge hidden" data-i18n="newBest"></div>
+        <div id="o-score" class="final-score">0</div>
+        <div class="stats">
+          <div><b id="o-dist">0 m</b><span data-i18n="distance"></span></div>
+          <div><b id="o-flips">0</b><span data-i18n="backflips"></span></div>
+          <div><b id="o-combo">×1</b><span data-i18n="bestCombo"></span></div>
+        </div>
+        <div class="coins-row">
+          <div class="earned"><i class="coin" aria-hidden="true"></i><b id="o-coins">+0</b><span data-i18n="coinsEarned"></span></div>
+          <button id="btn-double" class="btn btn-reward btn-small hidden">
+            <svg class="video" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><rect x="2" y="5" width="15" height="14" rx="3"/><path d="M17 10l5-3v10l-5-3z"/></svg>
+            <span data-i18n="doubleCoins"></span> ×2
+          </button>
+        </div>
+      </div>
+      <div class="over-b">
+        <div id="o-rankup" class="rankup hidden"></div>
+        <ul id="o-missions" class="missions compact"></ul>
+        <button id="btn-again" class="btn btn-primary btn-xl" data-i18n="playAgain"></button>
+        <div class="row">
+          <button id="btn-o-shop" class="btn" data-i18n="shop"></button>
+          <button id="btn-o-menu" class="btn" data-i18n="menu"></button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Shop -->
+  <section id="screen-shop" class="screen dim hidden">
+    <div class="card shop">
+      <header class="card-head">
+        <h2 data-i18n="shop"></h2>
+        <div class="wallet"><i class="coin" aria-hidden="true"></i><b id="s-coins">0</b></div>
+        <button class="icon-btn light" data-back data-i18n-label="close" aria-label="Close">
+          <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="3" stroke-linecap="round"/></svg>
+        </button>
+      </header>
+      <nav class="tabs" role="tablist">
+        <button data-tab="riders" role="tab" data-i18n="riders"></button>
+        <button data-tab="boards" role="tab" data-i18n="boards"></button>
+        <button data-tab="trails" role="tab" data-i18n="trails"></button>
+        <button data-tab="upgrades" role="tab" data-i18n="upgrades"></button>
+      </nav>
+      <div id="s-grid" class="grid"></div>
+    </div>
+  </section>
+
+  <!-- Settings -->
+  <section id="screen-settings" class="screen dim hidden">
+    <div class="card narrow settings">
+      <h2 data-i18n="settings"></h2>
+      <label class="toggle"><span data-i18n="music"></span><input type="checkbox" id="set-music"><i></i></label>
+      <label class="toggle"><span data-i18n="sfx"></span><input type="checkbox" id="set-sfx"><i></i></label>
+      <p id="muted-note" class="note hidden" data-i18n="mutedByHost"></p>
+      <div class="seg-row">
+        <span data-i18n="language"></span>
+        <div class="seg" role="radiogroup">
+          <button data-lang="en">English</button>
+          <button data-lang="de">Deutsch</button>
+        </div>
+      </div>
+      <h3 data-i18n="controlsTitle"></h3>
+      <p class="small" data-i18n="controlsText"></p>
+      <p class="small muted" data-i18n="credits"></p>
+      <button class="btn btn-primary" data-back data-i18n="back"></button>
+    </div>
+  </section>
+
+  <!-- Daily gift -->
+  <section id="screen-gift" class="screen dim hidden">
+    <div class="card narrow gift">
+      <h2 data-i18n="giftTitle"></h2>
+      <p id="g-streak" class="lead"></p>
+      <div class="gift-amount"><i class="coin big" aria-hidden="true"></i><b id="g-amount">+100</b></div>
+      <ol id="g-days" class="days" aria-hidden="true"></ol>
+      <p class="small muted" data-i18n="giftHint"></p>
+      <button id="btn-gift" class="btn btn-primary btn-xl" data-i18n="claim"></button>
+    </div>
+  </section>
+
+  <div id="toast" class="toast hidden" role="status"></div>
+
+  <script src="js/util.js"></script>
+  <script src="js/i18n.js"></script>
+  <script src="js/platform.js"></script>
+  <script src="js/content.js"></script>
+  <script src="js/progress.js"></script>
+  <script src="js/audio.js"></script>
+  <script src="js/terrain.js"></script>
+  <script src="js/rider.js"></script>
+  <script src="js/render.js"></script>
+  <script src="js/input.js"></script>
+  <script src="js/game.js"></script>
+  <script src="js/ui.js"></script>
+  <script src="js/main.js"></script>
+</body>
+</html>

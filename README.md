@@ -14,6 +14,7 @@ Alles wurde von Grund auf neu gebaut: Engine, Grafiken, Musik und Sounds, Logo, 
 | `brand/` | Logo, Wortmarke, Yeti-Maskottchen, App-Icon (SVG + PNG in allen Größen) |
 | `tools/` | Build-Skripte für die Brand-Assets, die PNG-Exporte, die Screenshots und den Sync |
 | `gipfelsturm/` | **Gipfelsturm** – das zweite Spiel: ein Open-World-3D-Skispiel mit 12 Bergen und ~190 Challenges (eigene WebGL-2-Engine). Siehe [gipfelsturm/README.md](gipfelsturm/README.md) |
+| `avalanche-rider/` | **Avalanche Rider** – das dritte Spiel: ein Ein-Tasten-Snowboard-Arcade-Spiel für CrazyGames (SDK-Werbung, Missionen, Shop), inklusive Upload-ZIP, Covern, Preview-Videos und einer Anleitung, wie man damit auf CrazyGames Geld verdient. Siehe [avalanche-rider/README.md](avalanche-rider/README.md) |
 
 ## Spielen
 
